@@ -5,6 +5,10 @@
 		function doctype(){
 			//qa_error_log($this->content);
 			
+			if($this->is_expert_user() && $this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
+				require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
+			}
+			
 			if(qa_clicked('do_expert_answeradd') && ($this->is_expert_user() || $this->content['q_view']['raw']['userid'] === qa_get_logged_in_userid())) {
 				global $qa_login_userid, $questionid, $question, $answers, $question, $qa_request;
 				
@@ -35,7 +39,7 @@
 				qa_page_q_load_q(); // reload since we may have changed something
 			}
 			
-			if (qa_opt('expert_questions_enable')) {
+			if (qa_opt('expert_question_enable')) {
 				global $qa_request;
 				if($qa_request == 'expert') {
 					$this->content['navigation']['sub'] = array('special'=>1);
@@ -174,7 +178,7 @@
 		
 		function voting($post)
 		{
-			if (@$this->expert_question && qa_opt('expert_questions_disable_voting')) {
+			if (@$this->expert_question && qa_opt('expert_question_disable_voting')) {
 				return;
 			}
 			qa_html_theme_base::voting($post);
@@ -182,9 +186,9 @@
 				
 		function nav_list($navigation, $class, $level=null)
 		{
-			if($class == 'nav-sub' && $this->template != 'admin' && qa_opt('expert_questions_enable') && $this->is_expert_user()) {
+			if($class == 'nav-sub' && $this->template != 'admin' && qa_opt('expert_question_enable') && $this->is_expert_user()) {
 				$navigation['expert'] = array(
-					  'label' => qa_opt('expert_questions_page_title'),
+					  'label' => qa_opt('expert_question_page_title'),
 					  'url' => qa_path_html('expert'),
 				);
 				if($this->request == 'expert') {
@@ -222,10 +226,10 @@
 				
 				if(!$uid) return;
 
-				$questions = $this->get_expert_questions_for_user($uid);
+				$questions = $this->get_expert_question_for_user($uid);
 				if(empty($questions)) return;
 				
-				$output = '<div class="expert_questions_container">';
+				$output = '<div class="expert_question_container">';
 				$qs = qa_db_read_all_assoc(
 					qa_db_query_sub(
 						"SELECT title,postid,acount FROM ^posts WHERE postid in (".implode(',',$questions).")"
@@ -255,9 +259,9 @@
 				$form=array(
 					'style' => 'tall',
 					
-					'tags' => 'id="expert_questions_form"',
+					'tags' => 'id="expert_question_form"',
 					
-					'title' => '<a id="expert_questions_title">'.qa_opt('expert_questions_page_title').'</a>',
+					'title' => '<a id="expert_question_title">'.qa_opt('expert_question_page_title').'</a>',
 
 					'fields' => $fields,
 				);
@@ -265,7 +269,7 @@
 			}			
 		}
 		
-		function get_expert_questions_for_user($uid) {
+		function get_expert_question_for_user($uid) {
 			$questions = qa_db_read_all_values(
 				qa_db_query_sub(
 					"SELECT ^posts.postid FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.userid=#",

@@ -1,8 +1,8 @@
 <?php
 
-	class qa_expert_questions_event {
+	class qa_expert_question_event {
 		function process_event($event, $userid, $handle, $cookieid, $params) {
-			if (qa_opt('expert_questions_enable')) {
+			if (qa_opt('expert_question_enable')) {
 				switch ($event) {
 					case 'q_post':
 						if(qa_post_text('is_expert_question') == 'yes') {

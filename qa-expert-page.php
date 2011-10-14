@@ -1,6 +1,6 @@
 <?php
 
-	class qa_expert_questions_page {
+	class qa_expert_question_page {
 		
 		var $directory;
 		var $urltoroot;
@@ -15,7 +15,7 @@
 		{	
 			return array(
 				array(
-					'title' => qa_opt('expert_questions_page_title'),
+					'title' => qa_opt('expert_question_page_title'),
 					'request' => 'expert',
 					'nav' => 'M', // 'M'=main, 'F'=footer, 'B'=before main, 'O'=opposite main, null=none
 				),
@@ -104,7 +104,7 @@
 				qa_opt('page_size_qs'), // questions per page
 				$qa_start, // start offset
 				count($questions), // total count
-				qa_opt('expert_questions_page_title'), // title if some questions
+				qa_opt('expert_question_page_title'), // title if some questions
 				$nonetitle, // title if no questions
 				null, // categories for navigation
 				null, // selected category id

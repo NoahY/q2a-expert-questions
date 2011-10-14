@@ -1,10 +1,10 @@
 <?php
-    class qa_expert_questions_admin {
+    class qa_expert_question_admin {
 
 	function option_default($option) {
 		
 	    switch($option) {
-		case 'expert_questions_page_title':
+		case 'expert_question_page_title':
 		    return 'Expert Questions';
 		case 'expert_question_roles':
 		    return 100;
@@ -14,7 +14,7 @@
 		    return '<b>Private</b> - ask the experts (hidden from the community)';
 		case 'expert_question_title':
 		    return '[expert question]';
-		case 'expert_questions_users':
+		case 'expert_question_users':
 		    return '';
 		default:
 		    return null;				
@@ -34,8 +34,8 @@
             
             $ok = null;
             
-            if (qa_clicked('expert_questions_save')) {
-		if((bool)qa_post_text('expert_questions_enable') && !qa_opt('expert_questions_enable')) {
+            if (qa_clicked('expert_question_save')) {
+		if((bool)qa_post_text('expert_question_enable') && !qa_opt('expert_question_enable')) {
 		    $table_exists = qa_db_read_one_value(qa_db_query_sub("SHOW TABLES LIKE '^postmeta'"),true);
 		    if(!$table_exists) {
 			qa_db_query_sub(
@@ -52,11 +52,11 @@
 		    }		    
     
 		}
-                qa_opt('expert_questions_enable',(bool)qa_post_text('expert_questions_enable'));
-                qa_opt('expert_questions_disable_voting',(bool)qa_post_text('expert_questions_disable_voting'));
+                qa_opt('expert_question_enable',(bool)qa_post_text('expert_question_enable'));
+                qa_opt('expert_question_disable_voting',(bool)qa_post_text('expert_question_disable_voting'));
                 
 		qa_opt('expert_question_roles',qa_post_text('expert_question_roles'));
-                qa_opt('expert_questions_users',qa_post_text('expert_questions_users'));
+                qa_opt('expert_question_users',qa_post_text('expert_question_users'));
 		
                 qa_opt('expert_question_no',qa_post_text('expert_question_no'));
                 qa_opt('expert_question_yes',qa_post_text('expert_question_yes'));
@@ -65,7 +65,7 @@
 		
 		$ok = qa_lang('admin/options_saved');
             }
-            else if (qa_clicked('expert_questions_reset')) {
+            else if (qa_clicked('expert_question_reset')) {
 		foreach($_POST as $i => $v) {
 		    $def = $this->option_default($i);
 		    if($def !== null) qa_opt($i,$def);
@@ -79,14 +79,14 @@
             
             $fields[] = array(
                 'label' => 'Enable expert questions',
-                'tags' => 'NAME="expert_questions_enable"',
-                'value' => qa_opt('expert_questions_enable'),
+                'tags' => 'NAME="expert_question_enable"',
+                'value' => qa_opt('expert_question_enable'),
                 'type' => 'checkbox',
             );
             $fields[] = array(
                 'label' => 'Disable voting on expert questions',
-                'tags' => 'NAME="expert_questions_disable_voting"',
-                'value' => qa_opt('expert_questions_disable_voting'),
+                'tags' => 'NAME="expert_question_disable_voting"',
+                'value' => qa_opt('expert_question_disable_voting'),
                 'type' => 'checkbox',
             );
 
@@ -103,8 +103,8 @@
 	    
             $fields[] = array(
                 'label' => 'Custom expert users:',
-                'tags' => 'NAME="expert_questions_users"',
-                'value' => qa_opt('expert_questions_users'),
+                'tags' => 'NAME="expert_question_users"',
+                'value' => qa_opt('expert_question_users'),
                 'note' => 'add usernames of expert users, one per line',
 		'rows' => 10,
                 'type' => 'textarea',
@@ -137,11 +137,11 @@
                 'buttons' => array(
                     array(
                         'label' => qa_lang_html('main/save_button'),
-                        'tags' => 'NAME="expert_questions_save"',
+                        'tags' => 'NAME="expert_question_save"',
                     ),
                     array(
                         'label' => qa_lang_html('admin/reset_options_button'),
-                        'tags' => 'NAME="expert_questions_reset"',
+                        'tags' => 'NAME="expert_question_reset"',
                     ),
                 ),
             );

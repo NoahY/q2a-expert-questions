@@ -18,10 +18,10 @@
                         exit;   
         }               
 
-        qa_register_plugin_module('module', 'qa-expert-admin.php', 'qa_expert_questions_admin', 'Expert Admin');
-        qa_register_plugin_module('event', 'qa-expert-check.php', 'qa_expert_questions_event', 'Expert Event');
+        qa_register_plugin_module('module', 'qa-expert-admin.php', 'qa_expert_question_admin', 'Expert Admin');
+        qa_register_plugin_module('event', 'qa-expert-check.php', 'qa_expert_question_event', 'Expert Event');
 
-        qa_register_plugin_module('page', 'qa-expert-page.php', 'qa_expert_questions_page', 'Expert Questions Page');
+        qa_register_plugin_module('page', 'qa-expert-page.php', 'qa_expert_question_page', 'Expert Questions Page');
         
         qa_register_plugin_layer('qa-expert-layer.php', 'Expert Layer');
                         
