@@ -26,7 +26,11 @@
 		{
 			if ($request=='expert' && $this->is_expert_user())
 				return true;
-
+			
+			if($request=='expert') {
+				qa_redirect('ask', array('expert' => 'true'));
+			}
+			
 			return false;
 		}
 
