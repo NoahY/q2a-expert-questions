@@ -1,27 +1,19 @@
-===========================
-Question2Answer Poll 1.0b
-===========================
+=======================================
+Question2Answer Expert Questions 1.0b
+=======================================
 -----------
 Description
 -----------
-This is a plugin for **Question2Answer** that provides poll functionality.
+This is a plugin for **Question2Answer** that provides ability to ask questions directed only to experts.
 
 --------
 Features
 --------
-- allows creating questions as polls, which removes ability for others to answer, comment on, or vote down them  (vote up only).
-- adds qa-main-poll wrapper to qa-main for custom poll css
-- admin and mods can still answer, comment on, and edit polls
-- choose between multi-voting or single-voting poll on ask form
-- jQuery answer adding via ask form
-- answer updates when voted on (optional)
-- add a Polls page (optional)
-- adds text to poll question titles
+- allows creating questions as "expert questions", viewable only by experts.
+- experts may be selected individually or by roles, via admin/plugins
+- adds an expert questions sub-nav to "Questions"
+- adds an expert questions page (optional)
 - all text fully customizable
-- all css fully customizable
-- Buddypress integration if `Buddypress plugin`_ is enabled
-
-.. _Buddypress plugin: https://github.com/NoahY/q2a-buddypress
 
 ------------
 Installation
@@ -30,16 +22,16 @@ Installation
 #. Get the source code for this plugin from github_, either using git_, or downloading directly:
 
    - To download using git, install git and then type 
-     ``git clone git://github.com/NoahY/q2a-poll.git poll``
+     ``git clone git://github.com/NoahY/q2a-expert-questions.git poll``
      at the command prompt (on Linux, Windows is a bit different)
    - To download directly, go to the `project page`_ and click **Download**
 
-#. navigate to your site, go to **Admin -> Plugins** on your q2a install and select the '**Enable polls**' option, then '**Save**'.
+#. navigate to your site, go to **Admin -> Plugins** on your q2a install and select the '**Enable Expert Questions**' option, then '**Save**'.
 
 .. _Question2Answer: http://www.question2answer.org/install.php
 .. _git: http://git-scm.com/
 .. _github:
-.. _project page: https://github.com/NoahY/q2a-poll
+.. _project page: https://github.com/NoahY/q2a-expert-questions
 
 ----------
 Disclaimer
