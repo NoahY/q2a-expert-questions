@@ -13,6 +13,7 @@ Features
 - experts may be selected individually or by roles, via admin/plugins
 - adds an expert questions sub-nav to "Questions"
 - adds an expert questions page (optional)
+- show open question count in tab (optional)
 - all text fully customizable
 
 ------------
