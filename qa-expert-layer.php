@@ -192,7 +192,7 @@
 				
 		function nav_list($navigation, $class, $level=null)
 		{
-			if($class == 'nav-sub' && $this->template != 'admin' && qa_opt('expert_question_enable') && $this->is_expert_user()) {
+			if($class == 'nav-sub' && in_array($this->template, array('plugin','questions')) && qa_opt('expert_question_enable') && $this->is_expert_user()) {
 				$navigation['expert'] = array(
 					  'label' => qa_opt('expert_question_page_title'),
 					  'url' => qa_path_html(qa_opt('expert_question_page_url')),
