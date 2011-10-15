@@ -10,6 +10,23 @@
 		    return 'Expert Questions';
 		case 'expert_question_roles':
 		    return 100;
+		case 'expert_question_email_subject':
+		    return '[^site_title] Expert Question Posted';
+		case 'expert_question_email_body':
+		    return 'An expert question has been posted at ^site_title:
+
+^post_title
+^post_url"
+
+Please visit the above link if you have an answer, or visit:
+
+^questions_list
+
+to see the list of all expert questions.
+
+You are receiving this email because you are registered as an expert at ^site_title.  If you feel this email has been sent in error, please let us know by replying to this email.
+
+Thank you for your help!';
 		case 'expert_question_no':
 		    return '<b>Public</b> - share question with entire community';
 		case 'expert_question_yes':
@@ -63,6 +80,8 @@
 
 		qa_opt('expert_question_roles',qa_post_text('expert_question_roles'));
                 qa_opt('expert_question_users',qa_post_text('expert_question_users'));
+
+                qa_opt('expert_question_email_experts',(bool)qa_post_text('expert_question_email_experts'));
 		
                 qa_opt('expert_question_no',qa_post_text('expert_question_no'));
                 qa_opt('expert_question_yes',qa_post_text('expert_question_yes'));
@@ -116,25 +135,6 @@
 	    $fields[] = array(
 		'type' => 'blank',
 	    );
-
-            $fields[] = array(
-                'label' => 'Show open expert question count in nav tab',
-		'note' => '"open" means doesn\'t have a selected answer',
-                'tags' => 'NAME="expert_question_show_count"',
-                'type' => 'checkbox',
-                'value' => qa_opt('expert_question_show_count'),
-            );
-
-            $fields[] = array(
-                'label' => 'Expert question page url',
-                'note' => '(set this in admin/pages as well!)',
-                'tags' => 'NAME="expert_question_page_url"',
-                'value' => qa_opt('expert_question_page_url'),
-            );
-
-	    $fields[] = array(
-		'type' => 'blank',
-	    );
 	    
 	    $permitoptions=qa_admin_permit_options(QA_PERMIT_EXPERTS, QA_PERMIT_ADMINS, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'));
 
@@ -155,6 +155,55 @@
 		'rows' => 10,
                 'type' => 'textarea',
             );
+	    
+	    $fields[] = array(
+		'type' => 'blank',
+	    );
+            $fields[] = array(
+                'label' => 'Email experts on new expert question',
+		'note' => 'only those specified in the above box will be emailed.',
+                'tags' => 'NAME="expert_question_email_experts"',
+                'type' => 'checkbox',
+                'value' => qa_opt('expert_question_email_experts'),
+            );	    
+	    $fields[] = array(
+		'label' => 'Email Subject',
+		'tags' => 'NAME="expert_question_email_subject"',
+		'value' => qa_opt('expert_question_email_subject'),
+		'type' => 'text',
+	    );
+
+	    $fields[] = array(
+		'label' =>  'Email Body',
+		'tags' => 'name="expert_question_email_body"',
+		'value' => qa_opt('expert_question_email_body'),
+		'type' => 'textarea',
+		'rows' => 20,
+		'note' => 'Available replacement text:<br/><br/><i>^site_title<br/>^handle<br/>^email<br/>^post_title<br/>^post_url<br/>^site_url',
+	    );
+	    
+	    $fields[] = array(
+		'type' => 'blank',
+	    );
+	    
+            $fields[] = array(
+                'label' => 'Show open expert question count in nav tab',
+		'note' => '"open" means doesn\'t have a selected answer',
+                'tags' => 'NAME="expert_question_show_count"',
+                'type' => 'checkbox',
+                'value' => qa_opt('expert_question_show_count'),
+            );
+
+            $fields[] = array(
+                'label' => 'Expert question page url',
+                'note' => '(set this in admin/pages as well!)',
+                'tags' => 'NAME="expert_question_page_url"',
+                'value' => qa_opt('expert_question_page_url'),
+            );
+
+	    $fields[] = array(
+		'type' => 'blank',
+	    );
 
             $fields[] = array(
                 'label' => 'Text for selecting expert question on ask form',

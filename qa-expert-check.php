@@ -5,6 +5,7 @@
 			if (qa_opt('expert_question_enable')) {
 				switch ($event) {
 					case 'q_post':
+						qa_error_log($params);
 						if(qa_post_text('is_expert_question') == 'yes' ||  (in_array(qa_opt('expert_question_type'),array(1,2)) && !qa_get_logged_in_userid()) || qa_opt('expert_question_type') == 3) {
 							qa_db_query_sub(
 								"UPDATE ^posts SET type='Q_HIDDEN' WHERE postid=#",
@@ -31,11 +32,45 @@
 								$params['postid']
 							);
 
+							if(qa_opt('expert_question_email_experts')) {
+								
+								$subs = array(
+									'^post_title'=> $params['title'],
+									'^post_url'=> qa_path_html(qa_q_request($params['postid'], $params['title']), null, qa_opt('site_url')),
+									'^questions_list'=> qa_path_html(qa_opt('expert_question_page_url'), null, qa_opt('site_url')),
+									'^site_url'=> qa_opt('site_url'),
+								);
+								
+								$experts = explode('\n',qa_opt('expert_question_users'));
+								foreach($experts as $handle) {
+									$userid = $this->getuserfromhandle($handle);
+									qa_send_notification($userid, '@', $handle, qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
+								}
+							}
 						}
 						break;
 					default:
 						break;
 				}
 			}
+		}
+		function getuserfromhandle($handle) {
+			require_once QA_INCLUDE_DIR.'qa-app-users.php';
+			
+			if (QA_FINAL_EXTERNAL_USERS) {
+				$publictouserid=qa_get_userids_from_public(array($handle));
+				$userid=@$publictouserid[$handle];
+				
+			} 
+			else {
+				$userid = qa_db_read_one_value(
+					qa_db_query_sub(
+						'SELECT userid FROM ^users WHERE handle = $',
+						$handle
+					),
+					true
+				);
+			}
+			return $userid;
 		}
 	}
