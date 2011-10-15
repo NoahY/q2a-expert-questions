@@ -10,7 +10,7 @@
 					if($nav['url'] == qa_path_html(qa_opt('expert_question_page_url'))) unset($this->content['navigation']['main'][$key]);
 				}
 			}
-			
+
 			if($this->is_expert_user() && $this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
 				require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
 			}
@@ -46,6 +46,20 @@
 			}
 			
 			if (qa_opt('expert_question_enable')) {
+
+				if($this->is_expert_user() && qa_opt('expert_question_show_count')) {
+					$this->expertcount = qa_db_read_one_value(
+						qa_db_query_sub(
+							"SELECT COUNT(postid) FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.selchildid IS NULL"
+						), true
+					);
+					if($this->expertcount) {
+						foreach($this->content['navigation']['main'] as $key => $nav) {
+							if($nav['url'] == qa_path_html(qa_opt('expert_question_page_url'))) $this->content['navigation']['main'][$key]['label'] .= ' ('.$this->expertcount.')';
+						}
+					}					
+				}
+				
 				global $qa_request;
 				if($qa_request == qa_opt('expert_question_page_url')) {
 					$this->content['navigation']['sub'] = array('special'=>1);
@@ -204,6 +218,10 @@
 					unset($navigation['recent']['selected']);
 					$navigation['expert']['selected'] = true;
 				}
+				if(@$this->expertcount) {
+					$navigation['expert']['label'] .= ' ('.$this->expertcount.')';
+				}		
+
 			}
 			if(count($navigation) > 1 || $class != 'nav-sub') qa_html_theme_base::nav_list($navigation, $class, $level=null);
 		}

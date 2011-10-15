@@ -59,6 +59,7 @@
                 qa_opt('expert_question_type',qa_post_text('expert_question_type'));
                 
                 qa_opt('expert_question_page_url',qa_post_text('expert_question_page_url'));
+                qa_opt('expert_question_show_count',(bool)qa_post_text('expert_question_show_count'));
 
 		qa_opt('expert_question_roles',qa_post_text('expert_question_roles'));
                 qa_opt('expert_question_users',qa_post_text('expert_question_users'));
@@ -115,6 +116,13 @@
 	    $fields[] = array(
 		    'type' => 'blank',
 	    );
+
+            $fields[] = array(
+                'label' => 'Show open expert question count in nav tab',
+		'note' => '"open" means doesn\'t have a selected answer',
+                'tags' => 'NAME="expert_question_show_count"',
+                'value' => qa_opt('expert_question_show_count'),
+            );
 
             $fields[] = array(
                 'label' => 'Expert question page url',
