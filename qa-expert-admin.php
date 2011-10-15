@@ -105,22 +105,23 @@
 	    );
 	    
 	    $fields[] = array(
-		    'id' => 'expert_question_type',
-		    'label' => 'Type of questions to consider expert',
-		    'tags' => 'NAME="expert_question_type" ID="expert_question_roles"',
-		    'type' => 'select',
-		    'options' => $question_types,
-		    'value' => $question_types[qa_opt('expert_question_type')],
+		'id' => 'expert_question_type',
+		'label' => 'Type of questions to consider expert',
+		'tags' => 'NAME="expert_question_type" ID="expert_question_roles"',
+		'type' => 'select',
+		'options' => $question_types,
+		'value' => $question_types[qa_opt('expert_question_type')],
 	    );
 
 	    $fields[] = array(
-		    'type' => 'blank',
+		'type' => 'blank',
 	    );
 
             $fields[] = array(
                 'label' => 'Show open expert question count in nav tab',
 		'note' => '"open" means doesn\'t have a selected answer',
                 'tags' => 'NAME="expert_question_show_count"',
+                'type' => 'checkbox',
                 'value' => qa_opt('expert_question_show_count'),
             );
 
@@ -132,18 +133,18 @@
             );
 
 	    $fields[] = array(
-		    'type' => 'blank',
+		'type' => 'blank',
 	    );
 	    
 	    $permitoptions=qa_admin_permit_options(QA_PERMIT_EXPERTS, QA_PERMIT_ADMINS, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'));
 
 	    $fields[] = array(
-		    'id' => 'expert_question_roles',
-		    'label' => 'Roles considered as expert',
-		    'tags' => 'NAME="expert_question_roles" ID="expert_question_roles"',
-		    'type' => 'select',
-		    'options' => $permitoptions,
-		    'value' => $permitoptions[qa_opt('expert_question_roles')],
+		'id' => 'expert_question_roles',
+		'label' => 'Roles considered as expert',
+		'tags' => 'NAME="expert_question_roles" ID="expert_question_roles"',
+		'type' => 'select',
+		'options' => $permitoptions,
+		'value' => $permitoptions[qa_opt('expert_question_roles')],
 	    );
 	    
             $fields[] = array(
