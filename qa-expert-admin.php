@@ -16,7 +16,7 @@
 		    return 'An expert question has been posted at ^site_title:
 
 ^post_title
-^post_url"
+^post_url
 
 Please visit the above link if you have an answer, or visit:
 
