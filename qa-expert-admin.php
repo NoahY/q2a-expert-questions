@@ -4,6 +4,8 @@
 	function option_default($option) {
 		
 	    switch($option) {
+		case 'expert_question_page_url':
+		    return 'expert';
 		case 'expert_question_page_title':
 		    return 'Expert Questions';
 		case 'expert_question_roles':
@@ -54,7 +56,10 @@
 		}
                 qa_opt('expert_question_enable',(bool)qa_post_text('expert_question_enable'));
                 qa_opt('expert_question_disable_voting',(bool)qa_post_text('expert_question_disable_voting'));
+                qa_opt('expert_question_type',qa_post_text('expert_question_type'));
                 
+                qa_opt('expert_question_page_url',qa_post_text('expert_question_page_url'));
+
 		qa_opt('expert_question_roles',qa_post_text('expert_question_roles'));
                 qa_opt('expert_question_users',qa_post_text('expert_question_users'));
 		
@@ -83,13 +88,45 @@
                 'value' => qa_opt('expert_question_enable'),
                 'type' => 'checkbox',
             );
+	    
             $fields[] = array(
                 'label' => 'Disable voting on expert questions',
                 'tags' => 'NAME="expert_question_disable_voting"',
                 'value' => qa_opt('expert_question_disable_voting'),
                 'type' => 'checkbox',
             );
+	    
+	    $question_types = array(
+		'specified when asking',
+		'anonymous questions',
+		'anonymous and specified',
+		'all'
+	    );
+	    
+	    $fields[] = array(
+		    'id' => 'expert_question_type',
+		    'label' => 'Type of questions to consider expert',
+		    'tags' => 'NAME="expert_question_type" ID="expert_question_roles"',
+		    'type' => 'select',
+		    'options' => $question_types,
+		    'value' => $question_types[qa_opt('expert_question_type')],
+	    );
 
+	    $fields[] = array(
+		    'type' => 'blank',
+	    );
+
+            $fields[] = array(
+                'label' => 'Expert question page url',
+                'note' => '(set this in admin/pages as well!)',
+                'tags' => 'NAME="expert_question_page_url"',
+                'value' => qa_opt('expert_question_page_url'),
+            );
+
+	    $fields[] = array(
+		    'type' => 'blank',
+	    );
+	    
 	    $permitoptions=qa_admin_permit_options(QA_PERMIT_EXPERTS, QA_PERMIT_ADMINS, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'));
 
 	    $fields[] = array(

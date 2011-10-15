@@ -24,10 +24,11 @@
 		
 		function match_request($request)
 		{
-			if ($request=='expert' && $this->is_expert_user())
+			$expert = qa_opt('expert_question_page_url');
+			if ($request==$expert && $this->is_expert_user())
 				return true;
 			
-			if($request=='expert') {
+			if($request==$expert) {
 				qa_redirect('ask', array('expert' => 'true'));
 			}
 			

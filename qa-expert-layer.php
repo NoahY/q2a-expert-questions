@@ -5,6 +5,12 @@
 		function doctype(){
 			//qa_error_log($this->content);
 			
+			if(!$this->is_expert_user()) {
+				foreach($this->content['navigation']['main'] as $key => $nav) {
+					if($nav['url'] == qa_path_html(qa_opt('expert_question_page_url'))) unset($this->content['navigation']['main'][$key]);
+				}
+			}
+			
 			if($this->is_expert_user() && $this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
 				require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
 			}
@@ -41,10 +47,10 @@
 			
 			if (qa_opt('expert_question_enable')) {
 				global $qa_request;
-				if($qa_request == 'expert') {
+				if($qa_request == qa_opt('expert_question_page_url')) {
 					$this->content['navigation']['sub'] = array('special'=>1);
 				}
-				if($this->template == 'ask' && !qa_user_permit_error('permit_post_q')) {
+				if($this->template == 'ask' && in_array(qa_opt('expert_question_type'),array(0,2)) &&  !qa_user_permit_error('permit_post_q')) {
 					$this->content['form']['fields'][] = array(
 						'tags' => 'NAME="is_expert_question" ID="is_expert_question"',
 						'value' => qa_get('expert')=='true'?qa_opt('expert_question_yes'):qa_opt('expert_question_no'),
@@ -189,9 +195,9 @@
 			if($class == 'nav-sub' && $this->template != 'admin' && qa_opt('expert_question_enable') && $this->is_expert_user()) {
 				$navigation['expert'] = array(
 					  'label' => qa_opt('expert_question_page_title'),
-					  'url' => qa_path_html('expert'),
+					  'url' => qa_path_html(qa_opt('expert_question_page_url')),
 				);
-				if($this->request == 'expert') {
+				if($this->request == qa_opt('expert_question_page_url')) {
 					unset($navigation['special']);
 					$newnav = qa_qs_sub_navigation(null);
 					$navigation = array_merge($newnav, $navigation);

@@ -5,7 +5,7 @@
 			if (qa_opt('expert_question_enable')) {
 				switch ($event) {
 					case 'q_post':
-						if(qa_post_text('is_expert_question') == 'yes') {
+						if(qa_post_text('is_expert_question') == 'yes' ||  (in_array(qa_opt('expert_question_type'),array(1,2)) && !qa_get_logged_in_userid()) || qa_opt('expert_question_type') == 3) {
 							qa_db_query_sub(
 								"UPDATE ^posts SET type='Q_HIDDEN' WHERE postid=#",
 								$params['postid']
