@@ -115,8 +115,7 @@
 				null, // suggest what to do next
 				null // extra parameters for page links
 			);
-			
-			return $qa_content;
+            $qa_content['script_onloads'][] = 'alert("hello, world!");';			return $qa_content;
 		}
 		
 		function is_expert_user() {

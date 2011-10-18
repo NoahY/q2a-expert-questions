@@ -75,6 +75,7 @@ Thank you for your help!';
                 qa_opt('expert_question_disable_voting',(bool)qa_post_text('expert_question_disable_voting'));
                 qa_opt('expert_question_type',qa_post_text('expert_question_type'));
                 
+                qa_opt('expert_question_page_title',qa_post_text('expert_question_page_title'));
                 qa_opt('expert_question_page_url',qa_post_text('expert_question_page_url'));
                 qa_opt('expert_question_show_count',(bool)qa_post_text('expert_question_show_count'));
 
@@ -192,6 +193,12 @@ Thank you for your help!';
                 'tags' => 'NAME="expert_question_show_count"',
                 'type' => 'checkbox',
                 'value' => qa_opt('expert_question_show_count'),
+            );
+
+            $fields[] = array(
+                'label' => 'Expert question page title',
+                'tags' => 'NAME="expert_question_page_title"',
+                'value' => qa_opt('expert_question_page_title'),
             );
 
             $fields[] = array(
