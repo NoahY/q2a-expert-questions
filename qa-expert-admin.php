@@ -83,6 +83,8 @@ Thank you for your help!';
                 qa_opt('expert_question_users',qa_post_text('expert_question_users'));
 
                 qa_opt('expert_question_email_experts',(bool)qa_post_text('expert_question_email_experts'));
+                qa_opt('expert_question_email_subject',qa_post_text('expert_question_email_subject'));
+                qa_opt('expert_question_email_body',qa_post_text('expert_question_email_body'));
 		
                 qa_opt('expert_question_no',qa_post_text('expert_question_no'));
                 qa_opt('expert_question_yes',qa_post_text('expert_question_yes'));
