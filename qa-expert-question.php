@@ -16,7 +16,6 @@
 	
 	$usecaptcha=qa_user_use_captcha('captcha_on_anon_post');
 
-	qa_error_log($question);
 //	Deal with question not found or not viewable, otherwise report the view event
 
 	if (!isset($question))

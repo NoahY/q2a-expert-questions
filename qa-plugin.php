@@ -1,7 +1,7 @@
 <?php
         
 /*              
-        Plugin Name: Expert Questionss
+        Plugin Name: Expert Questions
         Plugin URI: https://github.com/NoahY/q2a-expert
         Plugin Description: Ask expert questions
         Plugin Version: 1.0b
