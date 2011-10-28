@@ -58,7 +58,7 @@
 		
 					$answerid=qa_answer_create($qa_login_userid, qa_get_logged_in_handle(), $qa_cookieid,
 						$incontent, $informat, $intext, $innotify, $inemail, $question);
-					qa_report_write_action($qa_login_userid, $qa_cookieid, 'a_post', $questionid, $answerid, null);
+					//qa_report_write_action($qa_login_userid, $qa_cookieid, 'a_post', $questionid, $answerid, null);
 					qa_redirect($qa_request, null, null, null, qa_anchor('A', $answerid));
 					
 				} else {
