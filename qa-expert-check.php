@@ -40,7 +40,7 @@
 									'^site_url'=> qa_opt('site_url'),
 								);
 								
-								$experts = explode('\n',qa_opt('expert_question_users'));
+								$experts = explode("\n",qa_opt('expert_question_users'));
 								foreach($experts as $expert) {
 									if(strpos($user,'=')) {
 										$user = explode('=',$user);
@@ -54,8 +54,10 @@
 										if(in_array($params['categoryid'],$cats))
 											qa_send_notification($this->getuserfromhandle($user[0]), '@', $user[0], qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
 									}
-									else 
+									else {
+										error_log($expert);
 										qa_send_notification($this->getuserfromhandle($expert), '@', $expert, qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
+									}
 								}
 							}
 						}
