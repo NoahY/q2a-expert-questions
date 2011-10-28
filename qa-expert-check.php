@@ -52,10 +52,10 @@
 											)
 										);
 										if(in_array($params['categoryid'],$cats))
-											qa_send_notification(getuserfromhandle($user[0]), '@', $user[0], qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
+											qa_send_notification($this->getuserfromhandle($user[0]), '@', $user[0], qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
 									}
 									else 
-										qa_send_notification(getuserfromhandle($expert), '@', $expert, qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
+										qa_send_notification($this->getuserfromhandle($expert), '@', $expert, qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
 								}
 							}
 						}
