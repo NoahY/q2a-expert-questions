@@ -154,7 +154,7 @@ Thank you for your help!';
                 'label' => 'Custom expert users:',
                 'tags' => 'NAME="expert_question_users"',
                 'value' => qa_opt('expert_question_users'),
-                'note' => 'add usernames of expert users, one per line',
+                'note' => 'Add usernames of expert users, one per line.  To make a user expert for a specific set of categories, use the following syntax:<br/><br/>username=category1,category2,category3',
 		'rows' => 10,
                 'type' => 'textarea',
             );

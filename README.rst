@@ -11,6 +11,8 @@ Features
 --------
 - allows creating questions as "expert questions", viewable only by experts.
 - experts may be selected individually or by roles, via admin/plugins
+- experts may be specified for categories
+- experts selected individually may be sent email notifications for new expert questions
 - adds an expert questions sub-nav to "Questions"
 - adds an expert questions page (optional)
 - show open question count in tab (optional)

@@ -12,52 +12,11 @@
 	global $qa_login_userid, $questionid, $question, $parentquestion, $answers, $commentsfollows,
 			$relatedcount, $relatedquestions, $question, $categories;
 	
-	qa_page_q_load_q();
 	
 	$usecaptcha=qa_user_use_captcha('captcha_on_anon_post');
 
-//	Deal with question not found or not viewable, otherwise report the view event
-
-	if (!isset($question))
-		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
-
-	if (!$question['viewable'] && !$question['authorlast']) {
-		$qa_content=qa_content_prepare();
-		
-		if ($question['flagcount'] && !isset($question['lastuserid']))
-			$qa_content['error']=qa_lang_html('question/q_hidden_flagged');
-		elseif ($question['authorlast'])
-			$qa_content['error']=qa_lang_html('question/q_hidden_author');
-		else
-			$qa_content['error']=qa_lang_html('question/q_hidden_other');
-
-		$qa_content['suggest_next']=qa_html_suggest_qs_tags(qa_using_tags());
-
-		return $qa_content;
-	}
 	
 	$permiterror=qa_user_permit_error('permit_view_q_page');
-	
-	if ( $permiterror && (qa_is_human_probably() || !qa_opt('allow_view_q_bots')) ) {
-		$qa_content=qa_content_prepare();
-		$topage=qa_q_request($questionid, $question['title']);
-		
-		switch ($permiterror) {
-			case 'login':
-				$qa_content['error']=qa_insert_login_links(qa_lang_html('main/view_q_must_login'), $topage);
-				break;
-				
-			case 'confirm':
-				$qa_content['error']=qa_insert_login_links(qa_lang_html('main/view_q_must_confirm'), $topage);
-				break;
-				
-			default:
-				$qa_content['error']=qa_lang_html('users/no_permission');
-				break;
-		}
-		
-		return $qa_content;
-	}
 	
 
 //	If we're responding to an HTTP POST, include file that handles all posting/editing/etc... logic

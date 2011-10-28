@@ -2,17 +2,40 @@
 
 	class qa_html_theme_layer extends qa_html_theme_base {
 		
+		var $expert_user = null;
+		
 		function doctype(){
 			//qa_error_log($this->content);
 			
-			if(!$this->is_expert_user()) {
+			$this->expert_user = $this->is_expert_user();
+			if(!$this->expert_user) {
 				foreach($this->content['navigation']['main'] as $key => $nav) {
 					if($nav['url'] == qa_path_html(qa_opt('expert_question_page_url'))) unset($this->content['navigation']['main'][$key]);
 				}
 			}
-
-			if($this->is_expert_user() && $this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
-				require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
+			if($this->expert_user && $this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
+				global $questionid;
+				$expert = qa_db_read_one_value(
+					qa_db_query_sub(
+						"SELECT COUNT(meta_value) FROM ^postmeta WHERE meta_key='is_expert_question' AND post_id=#",
+						$questionid
+					), true
+				);
+				if($expert) {
+					if(is_array($this->expert_user)) {
+						$in_cats = qa_db_read_one_value(
+							qa_db_query_sub(
+								"SELECT COUNT(postid) FROM ^posts WHERE categoryid IN (#) AND postid=#",
+								$this->expert_user,$questionid
+							), true
+						);
+						if($in_cats)
+							require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
+							
+					}
+					else 
+						require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
+				}
 			}
 			
 			if(qa_clicked('do_expert_answeradd') && ($this->is_expert_user() || $this->content['q_view']['raw']['userid'] === qa_get_logged_in_userid())) {
@@ -47,10 +70,11 @@
 			
 			if (qa_opt('expert_question_enable')) {
 
-				if($this->is_expert_user() && qa_opt('expert_question_show_count')) {
+				if($expert_cats = $this->is_expert_user() && qa_opt('expert_question_show_count')) {
 					$this->expertcount = qa_db_read_one_value(
 						qa_db_query_sub(
-							"SELECT COUNT(postid) FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.selchildid IS NULL"
+							"SELECT COUNT(postid) FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.selchildid IS NULL".(is_array($expert_cats)?"AND posts.categoryid IN (#)":" AND $"),
+							$expert_cats
 						), true
 					);
 					if($this->expertcount) {
@@ -77,7 +101,6 @@
 
 					// add question list
 
-					$handle = preg_replace('/^[^\/]+\/([^\/]+).*/',"$1",$this->request);
 					$our_form = $this->expert_question_form();
 					if($our_form) {
 					
@@ -234,9 +257,26 @@
 				return true;
 			
 			$users = qa_opt('expert_question_users');
-			$users = explode('\n',$users);
+			$users = explode("\n",$users);
 			$handle = qa_get_logged_in_handle();
-			return in_array($handle, $users);
+			foreach($users as $idx => $user) {
+				if ($user == $handle) 
+					return true;
+				if(strpos($user,'=')) {
+					$user = explode('=',$user);
+					if($user[0] == $handle) {
+						$catnames = explode(',',$user[1]);
+						$cats = qa_db_read_all_values(
+							qa_db_query_sub(
+								'SELECT categoryid FROM ^categories WHERE title IN ($)',
+								$catnames
+							)
+						);
+						return $cats;
+					}
+				}
+			}
+			return false;
 		}
 
 		function expert_question_form() {
