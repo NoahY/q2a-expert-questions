@@ -41,9 +41,21 @@
 								);
 								
 								$experts = explode('\n',qa_opt('expert_question_users'));
-								foreach($experts as $handle) {
-									$userid = $this->getuserfromhandle($handle);
-									qa_send_notification($userid, '@', $handle, qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
+								foreach($experts as $expert) {
+									if(strpos($user,'=')) {
+										$user = explode('=',$user);
+										$catnames = explode(',',$user[1]);
+										$cats = qa_db_read_all_values(
+											qa_db_query_sub(
+												'SELECT categoryid FROM ^categories WHERE title IN ($)',
+												$catnames
+											)
+										);
+										if(in_array(params['categoryid'],$cats)
+											qa_send_notification(getuserfromhandle($user[0]), '@', $user[0], qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
+									}
+									else 
+										qa_send_notification(getuserfromhandle($expert), '@', $expert, qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
 								}
 							}
 						}
