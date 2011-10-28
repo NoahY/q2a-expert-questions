@@ -24,8 +24,9 @@
 		
 		function match_request($request)
 		{
+			$this->expert_user = $this->is_expert_user();
 			$expert = qa_opt('expert_question_page_url');
-			if ($request==$expert && $this->is_expert_user())
+			if ($request==$expert && $this->expert_user)
 				return true;
 			
 			if($request==$expert) {
@@ -34,7 +35,7 @@
 			
 			return false;
 		}
-
+		
 		function process_request($request)
 		{
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
@@ -57,8 +58,8 @@
 				),
 				
 				'arraykey' => 'postid',
-				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0',
-				'arguments' => array('is_expert_question'),
+				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0'.(is_array($this->expert_user)?' AND ^posts.categoryid IN (#)':' AND $'),
+				'arguments' => array('is_expert_question',$this->expert_user),
 			);			
 			$selectspec['columns']['content']='BINARY ^posts.content';
 			$selectspec['columns']['notify']='BINARY ^posts.notify';
@@ -125,12 +126,29 @@
 				return true;
 			
 			$users = qa_opt('expert_question_users');
-			$users = explode('\n',$users);
+			$users = explode("\n",$users);
 			$handle = qa_get_logged_in_handle();
-			return in_array($handle, $users);
-		}		
+			foreach($users as $idx => $user) {
+				if ($user == $handle) 
+					return true;
+				if(strpos($user,'=')) {
+					$user = explode('=',$user);
+					if($user[0] == $handle) {
+						$catnames = explode(',',$user[1]);
+						$cats = qa_db_read_all_values(
+							qa_db_query_sub(
+								'SELECT categoryid FROM ^categories WHERE title IN ($)',
+								$catnames
+							)
+						);
+						return $cats;
+					}
+				}
+			}
+			return false;
+		}	
 
-	};
+	}
 	
 
 /*

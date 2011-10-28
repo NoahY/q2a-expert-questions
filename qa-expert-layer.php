@@ -38,7 +38,7 @@
 				}
 			}
 			
-			if(qa_clicked('do_expert_answeradd') && ($this->is_expert_user() || $this->content['q_view']['raw']['userid'] === qa_get_logged_in_userid())) {
+			if(qa_clicked('do_expert_answeradd') && ($this->expert_user || $this->content['q_view']['raw']['userid'] === qa_get_logged_in_userid())) {
 				global $qa_login_userid, $questionid, $question, $answers, $question, $qa_request;
 				
 				$innotify=qa_post_text('notify') ? true : false;
@@ -70,11 +70,11 @@
 			
 			if (qa_opt('expert_question_enable')) {
 
-				if($expert_cats = $this->is_expert_user() && qa_opt('expert_question_show_count')) {
+				if($this->expert_user && qa_opt('expert_question_show_count')) {
 					$this->expertcount = qa_db_read_one_value(
 						qa_db_query_sub(
-							"SELECT COUNT(postid) FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.selchildid IS NULL".(is_array($expert_cats)?"AND posts.categoryid IN (#)":" AND $"),
-							$expert_cats
+							"SELECT COUNT(postid) FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.selchildid IS NULL".(is_array($this->expert_user)?" AND ^posts.categoryid IN (#)":" AND $"),
+							$this->expert_user
 						), true
 					);
 					if($this->expertcount) {
