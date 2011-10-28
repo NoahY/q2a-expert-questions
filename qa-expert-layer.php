@@ -97,34 +97,27 @@
 					);
 				}
 
-				if($this->template == 'user') { 
-
-					// add question list
-
-					$our_form = $this->expert_question_form();
-					if($our_form) {
-					
-						// insert our form
-						
-						if($this->content['q_list']) {  // paranoia
-							// array splicing kungfu thanks to Stack Exchange
-							
-							// This adds form-theme-switch before q_list
-						
-							$keys = array_keys($this->content);
-							$vals = array_values($this->content);
-
-							$insertBefore = array_search('q_list', $keys);
-
-							$keys2 = array_splice($keys, $insertBefore);
-							$vals2 = array_splice($vals, $insertBefore);
-
-							$keys[] = 'form-expert-questions';
-							$vals[] = $our_form;
-
-							$this->content = array_merge(array_combine($keys, $vals), array_combine($keys2, $vals2));
-						}
-						else $this->content['form-expert-questions'] = $theme_form;  // this shouldn't happen
+				if($this->template == 'user' && qa_get_logged_in_handle() === $this->_user_handle()) {
+					if(!isset($this->content['navigation']['sub'])) {
+						$this->content['navigation']['sub'] = array(
+							'profile' => array(
+								'url' => qa_path_html('user/'.$this->_user_handle(), null, qa_opt('site_url')),
+								'label' => $this->_user_handle(),
+								'selected' => !qa_get('tab')?true:false
+							),
+							'expert' => array(
+								'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>'expert'), qa_opt('site_url')),
+								'label' => qa_opt('expert_question_page_title'),
+								'selected' => qa_get('tab')=='expert'?true:false
+							),
+						);
+					}
+					else {
+						$this->content['navigation']['sub']['expert'] = array(
+							'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>'expert'), qa_opt('site_url')),
+							'label' => qa_opt('expert_question_page_title'),
+							'selected' => qa_get('tab')=='expert'?true:false
+						);
 					}
 
 				}
@@ -218,6 +211,23 @@
 			}
 			qa_html_theme_base::doctype();
 		}
+
+		function main_parts($content) {
+		
+			if($this->template == 'user' && qa_get_logged_in_handle() === $this->_user_handle()) {
+
+				if(qa_get('tab')=='expert') {
+					$our_form = $this->expert_question_form();
+					$content = array();
+					if($our_form) {
+						$content['form-expert-list'] = $our_form;  
+					}
+				}
+			 
+			}
+			qa_html_theme_base::main_parts($content);
+		
+		}
 		
 		function voting($post)
 		{
@@ -284,53 +294,52 @@
 			
 			global $qa_request;
 			
-			$handle = preg_replace('/^[^\/]+\/([^\/]+).*/',"$1",$qa_request);
-			if(qa_get_logged_in_handle() && qa_get_logged_in_handle() == $handle) {
-				$uid = $this->getuserfromhandle($handle);
-				
-				if(!$uid) return;
+			$handle = $this->_user_handle();
 
-				$questions = $this->get_expert_question_for_user($uid);
-				if(empty($questions)) return;
+			$uid = $this->getuserfromhandle($handle);
+			
+			if(!$uid) return;
+
+			$questions = $this->get_expert_question_for_user($uid);
+			if(empty($questions)) return;
+			
+			$output = '<div class="expert_question_container">';
+			$qs = qa_db_read_all_assoc(
+				qa_db_query_sub(
+					"SELECT title,postid,acount FROM ^posts WHERE postid in (".implode(',',$questions).")"
+				)
+			);
+			
+			foreach ( $qs as $question) {
 				
-				$output = '<div class="expert_question_container">';
-				$qs = qa_db_read_all_assoc(
-					qa_db_query_sub(
-						"SELECT title,postid,acount FROM ^posts WHERE postid in (".implode(',',$questions).")"
-					)
-				);
+				$title=$question['title'];
 				
-				foreach ( $qs as $question) {
-					
-					$title=$question['title'];
-					
-					$length = 60;
-					
-					$text = (strlen($title) > $length ? substr($title,0,$length).'...' : $title);
-					
-					$acount =($question['acount']==1) ? qa_lang_html('main/1_answer') : qa_lang_html_sub('main/x_answers', $question['acount']);
-					
-					$output .= '<div class="expert_question-row" id="expert_question-row-'.$idx.'"><a href="'.qa_path_html(qa_q_request($question['postid'],$title),NULL,qa_opt('site_url')).'">'.qa_html($text).'</a> ('.$acount.')</div>';
-				}
-				$output.='</div>';
+				$length = 60;
 				
-				$fields[] = array(
-					'type' => 'static',
-					'label' => $output,
-				);
+				$text = (strlen($title) > $length ? substr($title,0,$length).'...' : $title);
+				
+				$acount =($question['acount']==1) ? qa_lang_html('main/1_answer') : qa_lang_html_sub('main/x_answers', $question['acount']);
+				
+				$output .= '<div class="expert_question-row" id="expert_question-row-'.$idx.'"><a href="'.qa_path_html(qa_q_request($question['postid'],$title),NULL,qa_opt('site_url')).'">'.qa_html($text).'</a> ('.$acount.')</div>';
+			}
+			$output.='</div>';
+			
+			$fields[] = array(
+				'type' => 'static',
+				'label' => $output,
+			);
 
 
-				$form=array(
-					'style' => 'tall',
-					
-					'tags' => 'id="expert_question_form"',
-					
-					'title' => '<a id="expert_question_title">'.qa_opt('expert_question_page_title').'</a>',
+			$form=array(
+				'style' => 'tall',
+				
+				'tags' => 'id="expert_question_form"',
+				
+				'title' => '<a id="expert_question_title">'.qa_opt('expert_question_page_title').'</a>',
 
-					'fields' => $fields,
-				);
-				return $form;
-			}			
+				'fields' => $fields,
+			);
+			return $form;
 		}
 		
 		function get_expert_question_for_user($uid) {
@@ -362,6 +371,12 @@
 			}
 			if (!isset($userid)) return;
 			return $userid;
+		}
+		// grab the handle of the profile you're looking at
+		function _user_handle()
+		{
+			preg_match( '#user/([^/]+)#', $this->request, $matches );
+			return !empty($matches[1]) ? $matches[1] : null;
 		}
 	}
 
