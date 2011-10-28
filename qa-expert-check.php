@@ -51,7 +51,7 @@
 												$catnames
 											)
 										);
-										if(in_array(params['categoryid'],$cats))
+										if(in_array($params['categoryid'],$cats))
 											qa_send_notification(getuserfromhandle($user[0]), '@', $user[0], qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
 									}
 									else 
