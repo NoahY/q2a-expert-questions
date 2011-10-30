@@ -16,7 +16,7 @@
 			return array(
 				array(
 					'title' => qa_opt('expert_question_page_title'),
-					'request' => 'expert',
+					'request' => qa_opt('expert_question_page_url'),
 					'nav' => 'M', // 'M'=main, 'F'=footer, 'B'=before main, 'O'=opposite main, null=none
 				),
 			);
@@ -30,7 +30,7 @@
 				return true;
 			
 			if($request==$expert) {
-				qa_redirect('ask', array('expert' => 'true'));
+				qa_redirect('ask', array(qa_opt('expert_question_page_url') => 'true'));
 			}
 			
 			return false;

@@ -91,7 +91,7 @@
 				if($this->template == 'ask' && in_array(qa_opt('expert_question_type'),array(0,2)) &&  !qa_user_permit_error('permit_post_q')) {
 					$this->content['form']['fields'][] = array(
 						'tags' => 'NAME="is_expert_question" ID="is_expert_question"',
-						'value' => qa_get('expert')=='true'?qa_opt('expert_question_yes'):qa_opt('expert_question_no'),
+						'value' => qa_get(qa_opt('expert_question_page_url'))=='true'?qa_opt('expert_question_yes'):qa_opt('expert_question_no'),
 						'type' => 'select-radio',
 						'options' => array('no'=>qa_opt('expert_question_no'),'yes'=>qa_opt('expert_question_yes'))
 					);
@@ -105,18 +105,18 @@
 								'label' => $this->_user_handle(),
 								'selected' => !qa_get('tab')?true:false
 							),
-							'expert' => array(
-								'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>'expert'), qa_opt('site_url')),
+							qa_opt('expert_question_page_url') => array(
+								'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>qa_opt('expert_question_page_url')), qa_opt('site_url')),
 								'label' => qa_opt('expert_question_page_title'),
-								'selected' => qa_get('tab')=='expert'?true:false
+								'selected' => qa_get('tab')==qa_opt('expert_question_page_url')?true:false
 							),
 						);
 					}
 					else {
-						$this->content['navigation']['sub']['expert'] = array(
-							'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>'expert'), qa_opt('site_url')),
+						$this->content['navigation']['sub'][qa_opt('expert_question_page_url')] = array(
+							'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>qa_opt('expert_question_page_url')), qa_opt('site_url')),
 							'label' => qa_opt('expert_question_page_title'),
-							'selected' => qa_get('tab')=='expert'?true:false
+							'selected' => qa_get('tab')==qa_opt('expert_question_page_url')?true:false
 						);
 					}
 
@@ -217,7 +217,7 @@
 		
 			if($this->template == 'user' && qa_get_logged_in_handle() === $this->_user_handle()) {
 
-				if(qa_get('tab')=='expert') {
+				if(qa_get('tab')==qa_opt('expert_question_page_url')) {
 					$our_form = $this->expert_question_form();
 					$content = array();
 					if($our_form) {
@@ -241,7 +241,7 @@
 		function nav_list($navigation, $class, $level=null)
 		{
 			if($class == 'nav-sub' && in_array($this->template, array('plugin','questions')) && qa_opt('expert_question_enable') && $this->is_expert_user()) {
-				$navigation['expert'] = array(
+				$navigation[qa_opt('expert_question_page_url')] = array(
 					  'label' => qa_opt('expert_question_page_title'),
 					  'url' => qa_path_html(qa_opt('expert_question_page_url')),
 				);
@@ -250,10 +250,10 @@
 					$newnav = qa_qs_sub_navigation(null);
 					$navigation = array_merge($newnav, $navigation);
 					unset($navigation['recent']['selected']);
-					$navigation['expert']['selected'] = true;
+					$navigation[qa_opt('expert_question_page_url')]['selected'] = true;
 				}
 				if(@$this->expertcount) {
-					$navigation['expert']['label'] .= ' ('.$this->expertcount.')';
+					$navigation[qa_opt('expert_question_page_url')]['label'] .= ' ('.$this->expertcount.')';
 				}		
 
 			}
