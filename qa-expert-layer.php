@@ -88,7 +88,7 @@
 				if($qa_request == qa_opt('expert_question_page_url')) {
 					$this->content['navigation']['sub'] = array('special'=>1);
 				}
-				if($this->template == 'ask' && in_array(qa_opt('expert_question_type'),array(0,2)) &&  !qa_user_permit_error('permit_post_q')) {
+				if($this->template == 'ask' && in_array(qa_opt('expert_question_type'),array(0,2)) &&  !qa_user_permit_error('permit_post_q') && !qa_opt('site_maintenance')) {
 					$this->content['form']['fields'][] = array(
 						'tags' => 'NAME="is_expert_question" ID="is_expert_question"',
 						'value' => qa_get(qa_opt('expert_question_page_url'))=='true'?qa_opt('expert_question_yes'):qa_opt('expert_question_no'),
