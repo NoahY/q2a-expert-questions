@@ -138,6 +138,18 @@ Thank you for your help!';
 	    $fields[] = array(
 		'type' => 'blank',
 	    );
+            
+	    $fields[] = array(
+                'label' => 'Custom css:',
+                'tags' => 'NAME="expert_question_css"',
+                'value' => qa_opt('expert_question_css'),
+		'rows' => 10,
+                'type' => 'textarea',
+            );
+	    
+	    $fields[] = array(
+		'type' => 'blank',
+	    );
 	    
 	    $permitoptions=qa_admin_permit_options(QA_PERMIT_EXPERTS, QA_PERMIT_ADMINS, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'));
 
