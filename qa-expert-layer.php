@@ -213,6 +213,14 @@
 			qa_html_theme_base::doctype();
 		}
 
+		function head_custom() {
+			qa_html_theme_base::head_custom();
+			$this->output('<style>
+'.qa_opt('expert_question_css').'
+</style>');
+		}
+		
+
 		function main_parts($content) {
 		
 			if($this->template == 'user' && qa_get_logged_in_handle() === $this->_user_handle()) {

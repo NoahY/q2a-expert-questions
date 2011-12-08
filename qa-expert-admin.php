@@ -10,6 +10,12 @@
 		    return 'Expert Questions';
 		case 'expert_question_roles':
 		    return 100;
+		case 'expert_question_css':
+		    return '
+.qa-expert-question .qa-a-item-main {
+    margin-left:0;
+}
+';
 		case 'expert_question_email_subject':
 		    return '[^site_title] Expert Question Posted';
 		case 'expert_question_email_body':
@@ -54,23 +60,17 @@ Thank you for your help!';
             $ok = null;
             
             if (qa_clicked('expert_question_save')) {
-		if((bool)qa_post_text('expert_question_enable') && !qa_opt('expert_question_enable')) {
-		    $table_exists = qa_db_read_one_value(qa_db_query_sub("SHOW TABLES LIKE '^postmeta'"),true);
-		    if(!$table_exists) {
-			qa_db_query_sub(
-			    'CREATE TABLE IF NOT EXISTS ^postmeta (
-			    meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			    post_id bigint(20) unsigned NOT NULL,
-			    meta_key varchar(255) DEFAULT \'\',
-			    meta_value longtext,
-			    PRIMARY KEY (meta_id),
-			    KEY post_id (post_id),
-			    KEY meta_key (meta_key)
-			    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
-			);			
-		    }		    
-    
-		}
+		qa_db_query_sub(
+		    'CREATE TABLE IF NOT EXISTS ^postmeta (
+		    meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+		    post_id bigint(20) unsigned NOT NULL,
+		    meta_key varchar(255) DEFAULT \'\',
+		    meta_value longtext,
+		    PRIMARY KEY (meta_id),
+		    KEY post_id (post_id),
+		    KEY meta_key (meta_key)
+		    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
+		);			
                 qa_opt('expert_question_enable',(bool)qa_post_text('expert_question_enable'));
                 qa_opt('expert_question_disable_voting',(bool)qa_post_text('expert_question_disable_voting'));
                 qa_opt('expert_question_type',qa_post_text('expert_question_type'));
