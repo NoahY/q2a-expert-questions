@@ -255,7 +255,7 @@
 				);
 				if($this->request == qa_opt('expert_question_page_url')) {
 					unset($navigation['special']);
-					$newnav = qa_qs_sub_navigation(null);
+					$newnav = qa_qs_sub_navigation(null,null);
 					$navigation = array_merge($newnav, $navigation);
 					unset($navigation['recent']['selected']);
 					$navigation[qa_opt('expert_question_page_url')]['selected'] = true;
