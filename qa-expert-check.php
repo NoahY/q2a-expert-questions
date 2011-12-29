@@ -39,9 +39,9 @@
 								
 								$experts = explode("\n",qa_opt('expert_question_users'));
 								foreach($experts as $expert) {
-									if(strpos($user,'=')) {
-										$user = explode('=',$user);
-										$catnames = explode(',',$user[1]);
+									if(strpos($expert,'=')) {
+										$expert = explode('=',$expert);
+										$catnames = explode(',',$expert[1]);
 										$cats = qa_db_read_all_values(
 											qa_db_query_sub(
 												'SELECT categoryid FROM ^categories WHERE title IN ($)',
@@ -49,7 +49,7 @@
 											)
 										);
 										if(in_array($params['categoryid'],$cats))
-											qa_send_notification($this->getuserfromhandle($user[0]), '@', $user[0], qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
+											qa_send_notification($this->getuserfromhandle($expert[0]), '@', $expert[0], qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);
 									}
 									else {
 										qa_send_notification($this->getuserfromhandle($expert), '@', $expert, qa_opt('expert_question_email_subject'), qa_opt('expert_question_email_body'), $subs);

@@ -24,7 +24,11 @@
         qa_register_plugin_module('page', 'qa-expert-page.php', 'qa_expert_question_page', 'Expert Questions Page');
         
         qa_register_plugin_layer('qa-expert-layer.php', 'Expert Layer');
-                        
+
+        if(function_exists('qa_register_plugin_phrases')) {
+            qa_register_plugin_overrides('qa-expert-overrides.php');
+            qa_register_plugin_phrases('qa-expert-lang-*.php', 'expert_question');
+        }                       
                         
 /*                              
         Omit PHP closing tag to help avoid accidental output
