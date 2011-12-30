@@ -132,7 +132,7 @@ Thank you for your help!';
 		'tags' => 'NAME="expert_question_type" ID="expert_question_roles"',
 		'type' => 'select',
 		'options' => $question_types,
-		'value' => $question_types[qa_opt('expert_question_type')],
+		'value' => @$question_types[qa_opt('expert_question_type')],
 	    );
 
 	    $fields[] = array(
