@@ -186,50 +186,56 @@
 						// readd buttons
 						
 						if($this->is_expert_user() || $this->content['q_view']['raw']['userid'] === qa_get_logged_in_userid()) {
-							$answerform=null;
+							if(function_exists('qa_page_q_add_a_form')) 
+								$this->content['a_form']=qa_page_q_add_a_form($this->content, 'anew', false, $qid, null, null, true, false);
 							
-							$editorname=isset($ineditor) ? $ineditor : qa_opt('editor_for_as');
-							$editor=qa_load_editor(@$incontent, @$informat, $editorname);
-
-							$answerform=array(
-								'title' => qa_lang_html('question/your_answer_title'),
-								
-								'style' => 'tall',
-								
-								'fields' => array(
-									'content' => array_merge(
-										$editor->get_field($this->content, @$incontent, @$informat, 'content', 12, $formrequested),
-										array(
-											'error' => qa_html(@$errors['content']),
-										)
-									),
-								),
-								
-								'buttons' => array(
-									'answer' => array(
-										'tags' => 'NAME="do_expert_answeradd"',
-										'label' => qa_lang_html('question/add_answer_button'),
-									),
-								),
-								
-								'hidden' => array(
-									'editor' => qa_html($editorname),
-									'is_expert_question' => 'yes',
-								),
-							);
-							
-							qa_set_up_notify_fields($qa_content, $answerform['fields'], 'A', qa_get_logged_in_email(),
-								isset($innotify) ? $innotify : qa_opt('notify_users_default'), @$inemail, @$errors['email']);
-								
-							if ($usecaptcha)
-								qa_set_up_captcha_field($qa_content, $answerform['fields'], @$errors,
-									qa_insert_login_links(qa_lang_html(isset($qa_login_userid) ? 'misc/captcha_confirm_fix' : 'misc/captcha_login_fix')));
-							
-							if (empty($this->content['a_list']['as']))
-								$this->content['q_view']['a_form']=$answerform; // show directly under question
 							else {
-								$answerkeys=array_keys($this->content['a_list']['as']);
-								$this->content['a_list']['as'][$answerkeys[count($answerkeys)-1]]['c_form']=$answerform; // under last answer
+
+								$answerform=null;
+								
+								$editorname=isset($ineditor) ? $ineditor : qa_opt('editor_for_as');
+								$editor=qa_load_editor(@$incontent, @$informat, $editorname);
+
+								$answerform=array(
+									'title' => qa_lang_html('question/your_answer_title'),
+									
+									'style' => 'tall',
+									
+									'fields' => array(
+										'content' => array_merge(
+											$editor->get_field($this->content, @$incontent, @$informat, 'content', 12, $formrequested),
+											array(
+												'error' => qa_html(@$errors['content']),
+											)
+										),
+									),
+									
+									'buttons' => array(
+										'answer' => array(
+											'tags' => 'NAME="do_expert_answeradd"',
+											'label' => qa_lang_html('question/add_answer_button'),
+										),
+									),
+									
+									'hidden' => array(
+										'editor' => qa_html($editorname),
+										'is_expert_question' => 'yes',
+									),
+								);
+								
+								qa_set_up_notify_fields($qa_content, $answerform['fields'], 'A', qa_get_logged_in_email(),
+									isset($innotify) ? $innotify : qa_opt('notify_users_default'), @$inemail, @$errors['email']);
+									
+								if ($usecaptcha)
+									qa_set_up_captcha_field($this->content, $answerform['fields'], @$errors,
+										qa_insert_login_links(qa_lang_html(isset($qa_login_userid) ? 'misc/captcha_confirm_fix' : 'misc/captcha_login_fix')));
+								
+								if (empty($this->content['a_list']['as']))
+									$this->content['q_view']['a_form']=$answerform; // show directly under question
+								else {
+									$answerkeys=array_keys($this->content['a_list']['as']);
+									$this->content['a_list']['as'][$answerkeys[count($answerkeys)-1]]['c_form']=$answerform; // under last answer
+								}
 							}
 
 							$this->content['q_view']['form']['buttons']['comment'] = array(
