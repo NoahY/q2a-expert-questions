@@ -202,8 +202,7 @@ Thank you for your help!';
 	    );
 	    
             $fields[] = array(
-                'label' => 'Show open expert question count in nav tab',
-		'note' => '"open" means doesn\'t have a selected answer',
+                'label' => 'Show unanswered expert question count in nav tab',
                 'tags' => 'NAME="expert_question_show_count"',
                 'type' => 'checkbox',
                 'value' => qa_opt('expert_question_show_count'),

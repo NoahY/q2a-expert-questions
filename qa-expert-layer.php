@@ -105,7 +105,7 @@
 				if($this->expert_user && qa_opt('expert_question_show_count')) {
 					$this->expertcount = qa_db_read_one_value(
 						qa_db_query_sub(
-							"SELECT COUNT(postid) FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.selchildid IS NULL".(is_array($this->expert_user)?" AND ^posts.categoryid IN (#)":" AND $"),
+							"SELECT COUNT(postid) FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.acount=0".(is_array($this->expert_user)?" AND ^posts.categoryid IN (#)":" AND $"),
 							$this->expert_user
 						), true
 					);
