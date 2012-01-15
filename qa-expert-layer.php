@@ -45,7 +45,7 @@
 					if($nav['url'] == qa_path_html(qa_opt('expert_question_page_url'))) unset($this->content['navigation']['main'][$key]);
 				}
 			}
-			if($this->expert_user && $this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
+			if($this->expert_user && @$this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
 				global $questionid;
 				$expert = qa_db_read_one_value(
 					qa_db_query_sub(
