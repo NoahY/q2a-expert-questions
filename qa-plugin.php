@@ -3,6 +3,7 @@
 /*              
         Plugin Name: Expert Questions
         Plugin URI: https://github.com/NoahY/q2a-expert
+        Plugin Update Check URI: https://github.com/NoahY/q2a-expert/raw/master/qa-plugin.php
         Plugin Description: Ask expert questions
         Plugin Version: 1.0b
         Plugin Date: 2011-09-05
