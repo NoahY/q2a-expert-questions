@@ -8,8 +8,16 @@
 
 	function qa_page_q_post_rules($post, $parentpost=null, $siblingposts=null, $childposts=null) {
 		$rules = qa_page_q_post_rules_base($post, $parentpost, $siblingposts, $childposts);
-		$rules['commentbutton'] = true;
-		$rules['commentable'] = true;
+		$expert = qa_db_read_one_value(
+			qa_db_query_sub(
+				"SELECT meta_value FROM ^postmeta WHERE meta_key='is_expert_question' AND post_id=#",
+				$post['postid']
+			), true
+		);
+		if($expert){
+			$rules['commentbutton'] = true;
+			$rules['commentable'] = true;
+		}
 		return $rules;
 	}
 						
