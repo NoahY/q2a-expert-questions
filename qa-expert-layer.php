@@ -238,11 +238,6 @@
 								}
 							}
 
-							$this->content['q_view']['form']['buttons']['comment'] = array(
-							  'tags' => 'NAME="docommentq"',
-							  'label' => qa_lang('question/comment_button'),
-							  'popup' =>  qa_lang('question/comment_q_popup'),
-							);
 						}
 						
 					}
