@@ -385,6 +385,17 @@
 		}
 		
 		function get_expert_question_for_user($uid) {
+			qa_db_query_sub(
+				'CREATE TABLE IF NOT EXISTS ^postmeta (
+				meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+				post_id bigint(20) unsigned NOT NULL,
+				meta_key varchar(255) DEFAULT \'\',
+				meta_value longtext,
+				PRIMARY KEY (meta_id),
+				KEY post_id (post_id),
+				KEY meta_key (meta_key)
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
+			);		
 			$questions = qa_db_read_all_values(
 				qa_db_query_sub(
 					"SELECT ^posts.postid FROM ^postmeta, ^posts WHERE ^postmeta.meta_key='is_expert_question' AND ^postmeta.post_id=^posts.postid AND ^posts.userid=#",

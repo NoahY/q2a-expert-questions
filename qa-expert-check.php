@@ -7,7 +7,6 @@
 					case 'q_post':
 						if(qa_post_text('is_expert_question') == 'yes' ||  (in_array(qa_opt('expert_question_type'),array(1,2)) && !qa_get_logged_in_userid()) || qa_opt('expert_question_type') == 3) {
 							require_once QA_INCLUDE_DIR.'qa-app-post-update.php';
-							qa_error_log($params);
 							qa_question_set_hidden($params, true, $userid, $handle, $cookieid, array(), array());
 							
 							qa_db_query_sub(

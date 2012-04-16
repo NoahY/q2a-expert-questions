@@ -60,17 +60,17 @@ Thank you for your help!';
             $ok = null;
             
             if (qa_clicked('expert_question_save')) {
-		qa_db_query_sub(
-		    'CREATE TABLE IF NOT EXISTS ^postmeta (
-		    meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-		    post_id bigint(20) unsigned NOT NULL,
-		    meta_key varchar(255) DEFAULT \'\',
-		    meta_value longtext,
-		    PRIMARY KEY (meta_id),
-		    KEY post_id (post_id),
-		    KEY meta_key (meta_key)
-		    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
-		);			
+				qa_db_query_sub(
+					'CREATE TABLE IF NOT EXISTS ^postmeta (
+					meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+					post_id bigint(20) unsigned NOT NULL,
+					meta_key varchar(255) DEFAULT \'\',
+					meta_value longtext,
+					PRIMARY KEY (meta_id),
+					KEY post_id (post_id),
+					KEY meta_key (meta_key)
+					) ENGINE=MyISAM  DEFAULT CHARSET=utf8'
+				);			
                 qa_opt('expert_question_enable',(bool)qa_post_text('expert_question_enable'));
                 qa_opt('expert_question_disable_voting',(bool)qa_post_text('expert_question_disable_voting'));
                 qa_opt('expert_question_type',qa_post_text('expert_question_type'));
@@ -129,7 +129,7 @@ Thank you for your help!';
 	    $fields[] = array(
 		'id' => 'expert_question_type',
 		'label' => 'Type of questions to consider expert',
-		'tags' => 'NAME="expert_question_type" ID="expert_question_roles"',
+		'tags' => 'NAME="expert_question_type" ID="expert_question_type"',
 		'type' => 'select',
 		'options' => $question_types,
 		'value' => @$question_types[qa_opt('expert_question_type')],
