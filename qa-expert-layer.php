@@ -45,30 +45,7 @@
 					if($nav['url'] == qa_path_html(qa_opt('expert_question_page_url'))) unset($this->content['navigation']['main'][$key]);
 				}
 			}
-			if($this->expert_user && @$this->content['error'] == qa_lang_html('question/q_hidden_author')) { // experts that aren't allowed to change hidden questions
-				global $questionid;
-				$expert = qa_db_read_one_value(
-					qa_db_query_sub(
-						"SELECT COUNT(meta_value) FROM ^postmeta WHERE meta_key='is_expert_question' AND post_id=#",
-						$questionid
-					), true
-				);
-				if($expert) {
-					if(is_array($this->expert_user)) {
-						$in_cats = qa_db_read_one_value(
-							qa_db_query_sub(
-								"SELECT COUNT(postid) FROM ^posts WHERE categoryid IN (#) AND postid=#",
-								$this->expert_user,$questionid
-							), true
-						);
-						if($in_cats)
-							require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
-							
-					}
-					else 
-						require_once QA_HTML_THEME_LAYER_DIRECTORY.'qa-expert-question.php';
-				}
-			}
+
 			
 			if(qa_clicked('do_expert_answeradd') && ($this->expert_user || $this->content['q_view']['raw']['userid'] === qa_get_logged_in_userid())) {
 				global $qa_login_userid, $questionid, $question, $answers, $question, $qa_request;
@@ -174,72 +151,14 @@
 						$this->content['title'] .= ' '.qa_opt('expert_question_title');
 
 						// css class
-						
-						$this->content['main_form_tags'] .= ' class="qa-expert-question"';
+
+						$this->content['q_view']['tags'] .= ' class="qa-expert-question"';
 						
 						// remove hidden stuff
 						
-						unset($this->content['q_view']['form']['buttons']['reshow']);
 						unset($this->content['q_view']['hidden']);
 						unset($this->content['hidden']);
-						
-						// readd buttons
-						
-						if($this->is_expert_user() || $this->content['q_view']['raw']['userid'] === qa_get_logged_in_userid()) {
-							if(function_exists('qa_page_q_add_a_form')) 
-								$this->content['a_form']=qa_page_q_add_a_form($this->content, 'anew', false, $qid, null, null, true, false);
-							
-							else {
 
-								$answerform=null;
-								
-								$editorname=isset($ineditor) ? $ineditor : qa_opt('editor_for_as');
-								$editor=qa_load_editor(@$incontent, @$informat, $editorname);
-
-								$answerform=array(
-									'title' => qa_lang_html('question/your_answer_title'),
-									
-									'style' => 'tall',
-									
-									'fields' => array(
-										'content' => array_merge(
-											$editor->get_field($this->content, @$incontent, @$informat, 'content', 12, $formrequested),
-											array(
-												'error' => qa_html(@$errors['content']),
-											)
-										),
-									),
-									
-									'buttons' => array(
-										'answer' => array(
-											'tags' => 'NAME="do_expert_answeradd"',
-											'label' => qa_lang_html('question/add_answer_button'),
-										),
-									),
-									
-									'hidden' => array(
-										'editor' => qa_html($editorname),
-										'is_expert_question' => 'yes',
-									),
-								);
-								
-								qa_set_up_notify_fields($qa_content, $answerform['fields'], 'A', qa_get_logged_in_email(),
-									isset($innotify) ? $innotify : qa_opt('notify_users_default'), @$inemail, @$errors['email']);
-									
-								if ($usecaptcha)
-									qa_set_up_captcha_field($this->content, $answerform['fields'], @$errors,
-										qa_insert_login_links(qa_lang_html(isset($qa_login_userid) ? 'misc/captcha_confirm_fix' : 'misc/captcha_login_fix')));
-								
-								if (empty($this->content['a_list']['as']))
-									$this->content['q_view']['a_form']=$answerform; // show directly under question
-								else {
-									$answerkeys=array_keys($this->content['a_list']['as']);
-									$this->content['a_list']['as'][$answerkeys[count($answerkeys)-1]]['c_form']=$answerform; // under last answer
-								}
-							}
-
-						}
-						
 					}
 				}
 			}

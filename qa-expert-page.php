@@ -41,57 +41,23 @@
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 			require_once QA_INCLUDE_DIR.'qa-app-format.php';
 			require_once QA_INCLUDE_DIR.'qa-app-q-list.php';
-			
-		//	Get list of questions, plus category information
 
-			$nonetitle=qa_lang_html('main/no_questions_found');
+			$start=qa_get_start();
+			$userid=qa_get_logged_in_userid();			
+			$categoryslugs=qa_request_parts(1);
 			
-			$categorypathprefix=null; // only show category list and feed when sorting by date
-			$feedpathprefix=null;
+			//$selectspec = qa_db_qs_selectspec($userid, 'created', $start, $categoryslugs, null, false, false, qa_opt_if_loaded('page_size_qs'));
+			$selectspec=qa_db_posts_basic_selectspec($userid, false);
 
-			$selectspec=array(
-				'columns' => array(
-					'^posts.postid', '^posts.categoryid', '^posts.type', 'basetype' => 'LEFT(^posts.type,1)', 'hidden' => "INSTR(^posts.type, '_HIDDEN')>0",
-					'^posts.acount', '^posts.selchildid', '^posts.upvotes', '^posts.downvotes', '^posts.netvotes', '^posts.views', '^posts.hotness',
-					'^posts.flagcount', 'title' => 'BINARY ^posts.title', 'tags' => 'BINARY ^posts.tags', 'created' => 'UNIX_TIMESTAMP(^posts.created)',
-					'categoryname' => 'BINARY ^categories.title', 'categorybackpath' => "BINARY ^categories.backpath",
-				),
-				
-				'arraykey' => 'postid',
-				'source' => '^posts LEFT JOIN ^categories ON ^categories.categoryid=^posts.categoryid JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0'.(is_array($this->expert_user)?' AND ^posts.categoryid IN (#)':' AND $'),
-				'arguments' => array('is_expert_question',$this->expert_user),
-			);			
-			$selectspec['columns']['content']='BINARY ^posts.content';
-			$selectspec['columns']['notify']='BINARY ^posts.notify';
-			$selectspec['columns']['updated']='UNIX_TIMESTAMP(^posts.updated)';
-			$selectspec['columns'][]='^posts.format';
-			$selectspec['columns'][]='^posts.lastuserid';
-			$selectspec['columns']['lastip']='INET_NTOA(^posts.lastip)';
-			$selectspec['columns'][]='^posts.parentid';
-			$selectspec['columns']['lastviewip']='INET_NTOA(^posts.lastviewip)';
+			$selectspec['source'].=' JOIN ^postmeta ON ^posts.postid=^postmeta.post_id AND ^postmeta.meta_key=$ AND ^postmeta.meta_value>0'.(is_array($this->expert_user)?' AND ^posts.categoryid IN (#)':' AND $');
 
-			$selectspec['columns'][]='^posts.userid';
-			$selectspec['columns'][]='^posts.cookieid';
-			$selectspec['columns']['createip']='INET_NTOA(^posts.createip)';
-			$selectspec['columns'][]='^userpoints.points';
+			//$selectspec['source'].=' JOIN (SELECT postid FROM ^posts WHERE type=$ ORDER BY ^posts.created DESC LIMIT #,#) y ON ^posts.postid=y.postid';
 
-			if (!QA_FINAL_EXTERNAL_USERS) {
-				$selectspec['columns'][]='^users.flags';
-				$selectspec['columns'][]='^users.level';
-				$selectspec['columns']['email']='BINARY ^users.email';
-				$selectspec['columns']['handle']='CONVERT(^users.handle USING BINARY)'; // because of MySQL bug #29205
-				$selectspec['columns'][]='^users.avatarblobid';
-				$selectspec['columns'][]='^users.avatarwidth';
-				$selectspec['columns'][]='^users.avatarheight';
-				$selectspec['source'].=' LEFT JOIN ^users ON ^posts.userid=^users.userid';
-			}
+			$selectspec['arguments'] = array_merge($selectspec['arguments'],array('is_expert_question',$this->expert_user));
 			
-			$selectspec['source'].=' LEFT JOIN ^userpoints ON ^posts.userid=^userpoints.userid';
-			
-			$selectspec['source'].=' ORDER BY ^posts.created DESC';
-			
+
 			$questions = qa_db_select_with_pending($selectspec);
-			
+			$nonetitle=qa_lang_html('main/no_questions_found');
 			global $qa_start;
 			
 		//	Prepare and return content for theme
