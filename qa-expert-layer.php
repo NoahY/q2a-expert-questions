@@ -223,13 +223,15 @@
 	// worker functions
 		
 		function is_expert_user() {
+			$handle = qa_get_logged_in_handle();
+			if(!$handle)
+				return false;
 
 			if(!qa_permit_value_error(qa_opt('expert_question_roles'), qa_get_logged_in_userid(), qa_get_logged_in_level(), qa_get_logged_in_flags()))
 				return true;
 			
 			$users = qa_opt('expert_question_users');
 			$users = explode("\n",$users);
-			$handle = qa_get_logged_in_handle();
 			foreach($users as $idx => $user) {
 				if ($user == $handle) 
 					return true;
