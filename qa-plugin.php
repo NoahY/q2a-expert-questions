@@ -5,7 +5,7 @@
         Plugin URI: https://github.com/NoahY/q2a-expert
         Plugin Update Check URI: https://github.com/NoahY/q2a-expert/raw/master/qa-plugin.php
         Plugin Description: Ask expert questions
-        Plugin Version: 2.0
+        Plugin Version: 2.1
         Plugin Date: 2011-09-05
         Plugin Author: NoahY
         Plugin Author URI:                              
