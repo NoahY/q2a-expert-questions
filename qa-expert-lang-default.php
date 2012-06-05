@@ -26,6 +26,7 @@
 
 	return array(
 		'expert_question_roles' => 'Access expert questions',
+		'expert_question_ask' => 'Ask expert questions',
 	);
 	
 

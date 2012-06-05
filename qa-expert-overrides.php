@@ -3,6 +3,7 @@
 	function qa_get_permit_options() {
 		$permits = qa_get_permit_options_base();
 		$permits[] = 'expert_question_roles';
+		$permits[] = 'expert_question_ask';
 		return $permits;
 	}
 	

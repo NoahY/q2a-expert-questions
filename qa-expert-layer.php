@@ -6,7 +6,8 @@
 		
 		function doctype(){
 			//qa_error_log($this->content);
-			if($this->request == 'admin/permissions' && function_exists('qa_register_plugin_phrases')) {
+			if($this->request == 'admin/permissions' && function_exists('qa_register_plugin_phrases') && qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {
+				$permits[] = 'expert_question_ask';
 				$permits[] = 'expert_question_roles';
 				foreach($permits as $optionname) {
 					$value = qa_opt($optionname);
@@ -16,7 +17,7 @@
 						'tags' => 'NAME="option_'.$optionname.'" ID="option_'.$optionname.'"',
 						'error' => qa_html(@$errors[$optionname]),
 					);					
-					$widest=QA_PERMIT_EXPERTS;
+					$widest=QA_PERMIT_USERS;
 					$narrowest=QA_PERMIT_ADMINS;
 					
 					$permitoptions=qa_admin_permit_options($widest, $narrowest, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'));
@@ -97,7 +98,7 @@
 				if($qa_request == qa_opt('expert_question_page_url')) {
 					$this->content['navigation']['sub'] = array('special'=>1);
 				}
-				if($this->template == 'ask' && in_array(qa_opt('expert_question_type'),array(0,2)) &&  !qa_user_permit_error('permit_post_q') && !qa_opt('site_maintenance')) {
+				if($this->template == 'ask' && in_array(qa_opt('expert_question_type'),array(0,2)) &&  !qa_user_permit_error('permit_post_q') && !qa_permit_value_error(qa_opt('expert_question_ask'), qa_get_logged_in_userid(), qa_get_logged_in_level(), qa_get_logged_in_flags()) && !qa_opt('site_maintenance')) {
 					$this->content['form']['fields'][] = array(
 						'tags' => 'NAME="is_expert_question" ID="is_expert_question"',
 						'value' => qa_get(qa_opt('expert_question_page_url'))=='true'?qa_opt('expert_question_yes'):qa_opt('expert_question_no'),
