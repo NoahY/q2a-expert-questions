@@ -7,7 +7,20 @@
 		return $permits;
 	}
 	
-
+	function qa_get_request_content() {
+		$qa_content = qa_get_request_content_base();
+		
+		// permissions
+		
+		if(isset($qa_content['form_profile']['fields']['permits'])) {			
+			
+				$ov = $qa_content['form_profile']['fields']['permits']['value'];
+				$ov = str_replace('[profile/expert_question_roles]',qa_lang('expert_question/expert_question_roles'),$ov);
+				$ov = str_replace('[profile/expert_question_ask]',qa_lang('expert_question/expert_question_ask'),$ov);
+				$qa_content['form_profile']['fields']['permits']['value'] = $ov;
+		}
+		return $qa_content;
+	}
 	
 	function qa_page_q_post_rules($post, $parentpost=null, $siblingposts=null, $childposts=null) {
 		$rules = qa_page_q_post_rules_base($post, $parentpost, $siblingposts, $childposts);
